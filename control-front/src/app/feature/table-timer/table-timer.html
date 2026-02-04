@@ -1,0 +1,60 @@
+<div class="min-h-screen bg-gray-100 p-6">
+
+  <div class="max-w-3xl mx-auto bg-white rounded-lg shadow-md p-6 mb-6">
+
+    <h2 class="text-center text-xl font-bold mb-4">
+      Jornada Laboral
+    </h2>
+
+    <div class="text-center text-5xl font-mono mb-4">
+      {{ tiempoFormateado }}
+    </div>
+
+    @if (corriendo()) {
+        <button
+            type="button"
+            (click)="toggleJornada()"
+            class="w-full py-3 rounded-lg text-white font-semibold transition bg-red-600 hover:bg-red-700"
+        >
+            Finalizar jornada
+        </button>
+    }
+
+  </div>
+
+  <div class="max-w-3xl mx-auto bg-white rounded-lg shadow-md p-6">
+
+    <h3 class="font-bold mb-3">Registro de jornada</h3>
+
+    <div class="overflow-x-auto">
+      <table class="min-w-full border border-gray-200">
+        <thead class="bg-gray-200">
+          <tr>
+            <th class="p-2 border">Código</th>
+            <th class="p-2 border">Nombre</th>
+            <th class="p-2 border">Inicio</th>
+            <th class="p-2 border">Fin</th>
+            <th class="p-2 border">Tiempo total</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr class="text-center">
+            <td class="p-2 border">{{ codigo() }}</td>
+            <td class="p-2 border">{{ nombre() }}</td>
+            <td class="p-2 border">
+              {{ formatoHora(tiempoInicio()) }}
+            </td>
+            <td class="p-2 border">
+              {{ formatoHora(tiempoFin()) }}
+            </td>
+            <td class="p-2 border">
+              {{ tiempoFormateado }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>

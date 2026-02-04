@@ -1,0 +1,26 @@
+<div class="min-h-[calc(100vh-100px)] flex items-center justify-center bg-gray-100">
+  <div class="bg-white rounded-lg shadow-md p-6 w-full max-w-md border border-gray-200">
+
+    <div class="flex items-center justify-center font-bold pt-3 mb-4 text-center">
+      <h1>Ingresa el código para iniciar tu jornada laboral</h1>
+    </div>
+
+    <div class="mb-4">
+      <input 
+        #inputCodigo
+        type="number" 
+        class="border border-gray-300 text-base rounded-lg block w-full px-4 py-3.5"
+        placeholder="Escribe tu código"
+      />
+    </div>
+
+    <button 
+      type="button"
+      (click)="iniciarJornada(inputCodigo.value)"
+      class="w-full bg-blue-600 text-white font-semibold py-3 rounded-lg hover:bg-blue-700 transition"
+    >
+      Iniciar jornada
+    </button>
+
+  </div>
+</div>
