@@ -1,5 +1,7 @@
-<div class="min-h-[calc(100vh-100px)] flex items-center justify-center bg-gray-100">
-  <div class="bg-white rounded-lg shadow-md p-6 w-full max-w-md border border-gray-200">
+<div class="min-h-screen bg-gray-100 p-6">
+
+  <!-- CARD DE INGRESO DE CÓDIGO -->
+  <div class="max-w-3xl mx-auto bg-white rounded-lg shadow-md p-6 mb-6 border border-gray-200">
 
     <div class="flex items-center justify-center font-bold pt-3 mb-4 text-center">
       <h1>Ingresa el código para iniciar tu jornada laboral</h1>
@@ -8,19 +10,62 @@
     <div class="mb-4">
       <input 
         #inputCodigo
-        type="number" 
+        type="text" 
         class="border border-gray-300 text-base rounded-lg block w-full px-4 py-3.5"
         placeholder="Escribe tu código"
       />
+      @if (error()) {
+        <p  class="text-red-600 text-sm mt-1">
+          {{ error() }}
+        </p>
+      }
     </div>
 
     <button 
       type="button"
-      (click)="iniciarJornada(inputCodigo.value)"
+      (click)="startShift(inputCodigo.value)"
       class="w-full bg-blue-600 text-white font-semibold py-3 rounded-lg hover:bg-blue-700 transition"
+      [disabled]="isLoading()"
     >
-      Iniciar jornada
+      {{ isLoading() ? 'Cargando...' : 'Iniciar jornada' }}
     </button>
 
   </div>
+
+  <div class="max-w-3xl mx-auto bg-white rounded-lg shadow-md p-6">
+
+    <h3 class="font-bold mb-3">Registro de jornada</h3>
+
+    <div class="overflow-x-auto">
+      <table class="min-w-full border border-gray-200">
+        <thead class="bg-gray-200">
+          <tr>
+            <th class="p-2 border">Código</th>
+            <th class="p-2 border">Nombre</th>
+            <th class="p-2 border">Inicio</th>
+            <th class="p-2 border">Fin</th>
+            <th class="p-2 border">Tiempo total</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let shift of workShifts(); let i = index" class="text-center">
+            <td class="p-2 border">{{ shift.employee.code }}</td>
+            <td class="p-2 border">{{ shift.employee.first_name }}</td>
+            <td class="p-2 border">{{ shift.start_time | date:'shortTime' }}</td>
+            <td class="p-2 border">{{ shift.end_time | date:'shortTime' }}</td>
+            <td class="p-2 border">{{ shift.total_time }}</td>
+          </tr>
+
+          <tr *ngIf="workShifts().length === 0">
+            <td colspan="5" class="p-4 text-center text-gray-500">
+              No hay registros aún
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
 </div>

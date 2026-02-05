@@ -1,30 +1,55 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { TimerService } from './service/timer.service';
+import { CommonModule } from '@angular/common';
+import { SpinnerService } from '../../shared/components/spinner/services/spinner.service';
 
 @Component({
   selector: 'app-timer',
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './timer.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
+export class TimerComponent implements OnInit {
 
-export class TimerComponent {
-  
   private readonly router = inject(Router);
-  
-  codigo = signal<number | null>(null);
+  private readonly timerService = inject(TimerService);
+  private readonly spinnerService = inject(SpinnerService);
 
-  iniciarJornada(codigoIngresado: string) {
-    const valor = Number(codigoIngresado);
+  code = signal<string | null>(null);
+  isLoading = signal(false);
+  workShifts = signal<any[]>([]);
+  error = signal<string | null>(null);
 
-    if (!valor) {
-      console.log('Debe ingresar un código válido');
-      return;
-    }
+  ngOnInit(): void {
+    this.loadWorkShifts('');
+  }
 
-    this.codigo.set(valor);
-    console.log('Código guardado en señal:', this.codigo());
+  startShift(inputCode: string) {
+    this.isLoading.set(true);
+    this.error.set(null);
+    this.spinnerService.show();
 
-    this.router.navigate(['/timer-table']);
+    this.timerService.startWorkShift(inputCode).subscribe({
+      next: () => {
+        this.code.set(inputCode);
+        localStorage.setItem('userCode', inputCode);
+        this.router.navigate(['/timer-table']);
+      },
+      error: (err: any) => {
+          this.error.set('Este colaborador ya tiene una jornada activa.');
+          this.isLoading.set(false)
+      },
+      complete: () => this.spinnerService.hide()
+    });
+  }
+
+  loadWorkShifts(code: string) {
+    this.spinnerService.show();
+    this.timerService.getAllWorkShiftsByCode(code).subscribe({
+      next: (res: any) => this.workShifts.set(res.data ?? res),
+      error: err => console.error(err),
+      complete: () => this.spinnerService.hide()
+    });
   }
 }

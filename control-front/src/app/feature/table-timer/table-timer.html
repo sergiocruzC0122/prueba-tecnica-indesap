@@ -7,17 +7,17 @@
     </h2>
 
     <div class="text-center text-5xl font-mono mb-4">
-      {{ tiempoFormateado }}
+      {{ formattedElapsedTime }}
     </div>
 
-    @if (corriendo()) {
-        <button
-            type="button"
-            (click)="toggleJornada()"
-            class="w-full py-3 rounded-lg text-white font-semibold transition bg-red-600 hover:bg-red-700"
-        >
-            Finalizar jornada
-        </button>
+    @if (isRunning()) {
+      <button
+        type="button"
+        (click)="finishWorkShift()"
+        class="w-full py-3 rounded-lg text-white font-semibold transition bg-red-600 hover:bg-red-700"
+      >
+        Finalizar jornada
+      </button>
     }
 
   </div>
@@ -39,17 +39,17 @@
         </thead>
 
         <tbody>
-          <tr class="text-center">
-            <td class="p-2 border">{{ codigo() }}</td>
-            <td class="p-2 border">{{ nombre() }}</td>
-            <td class="p-2 border">
-              {{ formatoHora(tiempoInicio()) }}
-            </td>
-            <td class="p-2 border">
-              {{ formatoHora(tiempoFin()) }}
-            </td>
-            <td class="p-2 border">
-              {{ tiempoFormateado }}
+          <tr *ngFor="let shift of workShifts()">
+            <td class="p-2 border">{{ shift.employee.code }}</td>
+            <td class="p-2 border">{{ shift.employee.first_name }}</td>
+            <td class="p-2 border">{{ shift.start_time | date:'shortTime' }}</td>
+            <td class="p-2 border">{{ shift.end_time | date:'shortTime' }}</td>
+            <td class="p-2 border">{{ shift.total_time }}</td>
+          </tr>
+
+          <tr *ngIf="workShifts().length === 0">
+            <td colspan="5" class="p-4 text-center text-gray-500">
+              No hay registros de jornada aún
             </td>
           </tr>
         </tbody>
@@ -57,4 +57,5 @@
     </div>
 
   </div>
+
 </div>
